@@ -98,6 +98,47 @@ getConfluencePageInlineComments(cloudId: "atomchat.atlassian.net", pageId: <frdI
 
 **Guardar** comentarios del FRD (footer + inline) — frecuentemente contienen decisiones de PM/diseño post-spec.
 
+## Paso 4.5 — Cross-check FRD vs HU/Task
+
+Antes de armar el brief, comparar lo que dice cada fuente sobre los criterios de aceptación y el alcance de la tarea.
+
+**Qué buscar:**
+
+1. **Criterio en FRD que contradice al task/HU** — el FRD dice "X debe hacer Y" pero el task dice "X debe hacer Z"
+2. **Criterio en FRD que no aparece en el task** — el FRD menciona algo que el task ignora completamente (señal de que el task está desactualizado)
+3. **Criterio en el task que no aparece en el FRD** — el task pide algo que el FRD no contempla (posible scope creep o task mal escrito)
+
+**Regla de prioridad por defecto:** el FRD es la fuente de verdad funcional. Fue revisado por PM, PO y diseño. El task puede quedar desactualizado cuando el FRD evoluciona.
+
+**Si no hay mismatches:** continuar silencioso al Paso 5.
+
+**Si hay mismatches:** interrumpir y presentar al usuario antes de continuar:
+
+```
+⚠️  ATOMIC ► DISCREPANCIAS DETECTADAS
+───────────────────────────────────────────────────────────────
+
+Encontré diferencias entre el FRD y el task/HU. Antes de armar
+el brief, necesito saber cuál fuente seguir:
+
+MISMATCH 1:
+  FRD dice   : <cita exacta del FRD>
+  Task/HU dice: <cita exacta del task o HU>
+  → ¿Cuál es correcto?
+
+MISMATCH 2:
+  FRD menciona: <algo que no está en el task>
+  Task: no lo cubre
+  → ¿Lo incluyo en el brief?
+
+[... un bloque por mismatch ...]
+
+───────────────────────────────────────────────────────────────
+Responde por número o dime si el FRD gana en todos los casos.
+```
+
+Incorporar las respuestas del usuario al brief. Documentar los mismatches detectados en la sección **PREGUNTAS / INFO FALTANTE** del brief para que quede registro.
+
 ## Paso 5 — Compilar el brief
 
 Presentar en este formato:
