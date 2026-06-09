@@ -18,6 +18,14 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.11.0] - 2026-06-08
+
+### Changed
+- Skill `/task` v1.7.0 + `/spec` v1.3.0: principio de escepticismo reforzado
+  - Reemplaza checklist de retro compat por asunción base: quien documentó no conocía todas las implicaciones técnicas
+  - Aplica a specs escritos por humanos y por IA — especialmente en el segundo caso donde el texto suena completo sin serlo
+  - El trabajo no es transcribir el FRD, es validar si es implementable, coherente y completo
+
 ## [0.10.0] - 2026-06-08
 
 ### Added

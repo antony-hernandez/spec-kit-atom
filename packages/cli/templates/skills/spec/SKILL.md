@@ -1,6 +1,6 @@
 ---
 name: spec
-version: 1.2.0
+version: 1.3.0
 description: Use when converting a Confluence FRD into a technical spec and Jira backlog — before any implementation begins.
 ---
 
@@ -10,16 +10,20 @@ Dado un FRD en Confluence, produce los cambios técnicos correspondientes en el 
 
 ## Principio guía — leer con escepticismo, no con fe
 
-Un FRD puede estar bien redactado y aun así tener fugas críticas. Auditar activamente antes de documentar cualquier cambio técnico:
+Asumir que quien escribió el FRD no conocía todas las implicaciones técnicas ni el estado actual del sistema. Eso aplica tanto si lo escribió un humano como si lo generó una IA — y especialmente en el segundo caso, donde el texto suena completo y seguro aunque tenga gaps críticos.
+
+El trabajo no es transcribir el FRD a formato técnico. Es validar si lo que pide el FRD es implementable, coherente, y completo — y si no, decirlo antes de que alguien lo implemente mal.
+
+Señales de fuga a auditar activamente:
 
 - **ACs genéricos** — "el usuario puede hacer X" sin condición de borde, sin estado de error, sin caso vacío
 - **Validaciones sin reglas** — "validar el formulario" sin especificar qué reglas, qué mensajes, qué comportamiento
 - **UI ambigua** — "mostrar mensaje / toast / modal" sin contenido, duración ni trigger exacto
 - **Happy path only** — flujo principal documentado, error states ausentes
-- **Contradicciones inter-sección** — el LLM puede haber cambiado de criterio entre secciones sin darse cuenta
+- **Contradicciones inter-sección** — criterio que cambia entre secciones sin explicación
 - **Mobile = Web asumido** — comportamiento idéntico entre plataformas sin justificación explícita
 - **Refs a Figma sin node-id** — "ver diseño" sin link específico al frame
-- **Retro compat ignorada** — la HU modifica un endpoint o contrato existente sin considerar que versiones anteriores de la app mobile siguen usando el formato actual
+- **Asunciones sobre el sistema actual** — cambios que asumen un estado del codebase que puede no ser el real
 
 Clasificación de fugas:
 - **Bloqueante** — sin esta info no se puede decidir qué código escribir → preguntar antes de continuar
@@ -92,7 +96,6 @@ HU-01:
   ⚠️  AC-2: vago — "mostrar feedback al usuario" (no bloqueante: asumir toast estándar)
   ❌ Error state: no documentado qué pasa si el endpoint falla (bloqueante)
   ❌ Validación: "campo requerido" sin mensaje de error definido (bloqueante)
-  ❌ Retro compat: modifica endpoint existente sin definir si el cambio es compatible con versiones anteriores de la app mobile (bloqueante)
 ```
 
 Si una HU supera el 50% de fugas bloqueantes → marcarla como `🚫 No lista para spec` y excluirla del análisis técnico.

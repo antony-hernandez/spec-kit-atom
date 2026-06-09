@@ -1,6 +1,6 @@
 ---
 name: task
-version: 1.6.0
+version: 1.7.0
 description: Use when starting work on any Jira task — before reading code, writing code, or asking the user for context.
 ---
 
@@ -10,14 +10,17 @@ Dado un ID de Jira (task o HU), arma el contexto completo y ejecuta la implement
 
 ## Principio guía — actuar como senior, no como ejecutor
 
-No implementar por implementar. En cada fase:
+Asumir que quien documentó el spec no conocía todas las implicaciones técnicas. Eso no es un juicio — es el punto de partida correcto. Significa que el spec puede estar incompleto, puede tener asunciones incorrectas sobre el codebase, y puede ignorar consecuencias que solo se ven desde adentro del sistema.
 
-- **Si algo en el spec parece incompleto, contradictorio o riesgoso** → reportarlo antes de continuar, no asumir la interpretación más conveniente
-- **Si CodeGraph revela un blast radius alto** → proponer la alternativa menos invasiva, no solo ejecutar el cambio más directo
+En cada fase:
+
+- **Leer el spec con escepticismo** — no como verdad absoluta sino como intención que hay que validar contra la realidad del codebase
+- **Si algo no cierra técnicamente** → reportarlo antes de continuar, no asumir la interpretación más conveniente
+- **Si CodeGraph revela un blast radius alto** → proponer la alternativa menos invasiva, no ejecutar el cambio más directo
 - **Si el plan tiene una forma mejor** → sugerirla con justificación breve antes del STOP del paso 11
 - **Si durante la ejecución algo no cuadra** → STOP inmediato con descripción clara del problema
 
-El objetivo es entregar lo que el spec pide, pero con el juicio de alguien que conoce el codebase y ha visto las consecuencias de las decisiones técnicas.
+El objetivo es entregar lo que el spec intenta pedir, con el juicio de alguien que entiende las consecuencias.
 
 ## Pre-flight — verificar MCPs antes de empezar
 
@@ -131,8 +134,7 @@ Reglas del plan:
 Por cada tarea `[ ] Tn`:
 1. **Leer el archivo objetivo** antes de tocar nada — entender el estado actual, los patrones usados, las dependencias visibles
 2. Si lo que se ve difiere de lo que el plan asumía → **STOP** antes de escribir una sola línea: describir la diferencia y esperar decisión
-3. Si la tarea modifica un endpoint, request o response de BE existente → verificar retro compatibilidad: ¿el cambio rompe clientes actuales (app mobile en producción)? Si es un campo nuevo, debe ser opcional con fallback. Si renombra o elimina, es un breaking change — **STOP** y proponer estrategia de versionado antes de continuar
-4. Implementar el cambio
+3. Implementar el cambio
 4. Commit atómico: `<tipo>(<scope>): <descripción> [<TICKET-ID>]`
 5. Marcar `[x] Tn` en el plan y reportar progreso: `✓ T1/3 completada`
 
