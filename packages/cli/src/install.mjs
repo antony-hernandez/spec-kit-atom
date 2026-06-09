@@ -212,6 +212,9 @@ async function install() {
   writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
 
   console.log(bold("\n¡Listo! Atomic instalado.\n"));
+  console.log("  Siguiente paso (requerido):");
+  console.log(yellow("    npx @colbymchenry/codegraph init -i") + dim("  ← indexar el codebase (necesario para /task)"));
+  console.log(dim("    Corré esto una vez en la raíz del proyecto. Tarda 1-2 min en repos grandes.\n"));
   console.log("  Uso:");
   console.log("    /task CV-123          ← carga el brief completo de una tarea");
   console.log("    /spec <URL_FRD>       ← convierte un FRD en spec técnica + backlog\n");

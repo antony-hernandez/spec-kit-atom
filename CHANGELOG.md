@@ -18,6 +18,13 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.20.0] - 2026-06-09
+
+### Added
+- Installer: instrucción post-install para indexar CodeGraph
+  - Muestra `npx @colbymchenry/codegraph init -i` como paso requerido después de instalar
+  - Sin el índice, el MCP server arranca pero devuelve "not initialized" — /task no funciona
+
 ## [0.19.0] - 2026-06-09
 
 ### Changed
