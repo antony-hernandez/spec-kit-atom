@@ -1,11 +1,11 @@
 ---
 name: task
-description: Use when starting work on a Jira task ID — loads full implementation context from Jira, Confluence, and Figma before writing any code.
+description: Use when starting work on any Jira task — before reading code, writing code, or asking the user for context.
 ---
 
 # Task Discovery
 
-Dado un ID de Jira, arma el contexto completo antes de implementar. Sigue las fases en orden.
+Dado un ID de Jira (task o HU), arma el contexto completo antes de implementar. Sigue las fases en orden. No leer código ni preguntar al usuario hasta terminar el discovery.
 
 ## Fase 1 — Discovery (en paralelo donde sea posible)
 
@@ -32,3 +32,17 @@ Dado un ID de Jira, arma el contexto completo antes de implementar. Sigue las fa
 **8.** STOP — presentar el brief completo y preguntar explícitamente: _"¿Algo que ajustar antes de empezar?"_ No continuar hasta recibir respuesta.
 
 **9.** Implementar siguiendo estrictamente el brief y las reglas de CLAUDE.md.
+
+## Errores comunes
+
+| Error | Corrección |
+|-------|------------|
+| Tomar el Figma genérico del header del FRD | Buscar la sección `### HU-XX` y extraer el node-id de ahí |
+| Mezclar cambios FE y BE en el mismo brief | Filtrar estrictamente por `TASK_TYPE` desde la Spec Técnica |
+| Buscar "Documento fuente" en remote links de Jira | Está en el body de la HU — parsear el texto de `description` |
+| Saltear el paso 8 si el brief quedó completo | El STOP es obligatorio siempre, independientemente de la calidad del brief |
+| Subir directo a la Spec sin pasar por la HU | El link al spec vive en la HU, no en el task |
+
+## Cuándo NO usar
+
+- Si el brief de esta tarea ya está cargado en la sesión actual → no re-correr el skill, usarlo directamente.
