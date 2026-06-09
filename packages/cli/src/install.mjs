@@ -110,14 +110,18 @@ async function install() {
     console.log(yellow("  ~ MCP CodeGraph ya configurado"));
   }
 
-  if (!settings.mcpServers["plugin:atlassian:atlassian"]) {
-    console.log(yellow("  ! MCP Atlassian no detectado"));
-    console.log("    Instálalo desde: claude.ai/settings → Integrations → Atlassian");
-  }
+  const missingMcps = [];
+  if (!settings.mcpServers["plugin:atlassian:atlassian"]) missingMcps.push("Atlassian");
+  if (!settings.mcpServers["plugin:figma:figma"]) missingMcps.push("Figma");
 
-  if (!settings.mcpServers["plugin:figma:figma"]) {
-    console.log(yellow("  ! MCP Figma no detectado"));
-    console.log("    Instálalo desde: claude.ai/settings → Integrations → Figma");
+  if (missingMcps.length > 0) {
+    console.log(yellow(`\n  ⚠️  Setup pendiente — sin esto el skill /task no funciona:\n`));
+    console.log("    1. Abrí claude.ai/settings → Integrations");
+    missingMcps.forEach((mcp, i) => {
+      console.log(yellow(`    ${i + 2}. Conectá "${mcp}" → autenticá con tu cuenta`));
+    });
+    console.log(`    ${missingMcps.length + 2}. Reiniciá Claude Code en este proyecto`);
+    console.log("");
   }
 
   writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
@@ -125,10 +129,6 @@ async function install() {
   console.log(bold("\n¡Listo! Atomic instalado.\n"));
   console.log("  Uso:");
   console.log("    /task CV-123    ← carga el brief completo de una tarea\n");
-  console.log("  MCPs requeridos:");
-  console.log("    ✓ CodeGraph (configurado)");
-  console.log("    → Atlassian: claude.ai/settings → Integrations");
-  console.log("    → Figma:     claude.ai/settings → Integrations\n");
 }
 
 install().catch((err) => {

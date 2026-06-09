@@ -7,6 +7,25 @@ description: Use when starting work on any Jira task — before reading code, wr
 
 Dado un ID de Jira (task o HU), arma el contexto completo antes de implementar. Sigue las fases en orden. No leer código ni preguntar al usuario hasta terminar el discovery.
 
+## Pre-flight — verificar MCPs antes de empezar
+
+Llamar `atlassianUserInfo()`. Si falla o no está disponible → **detener** y mostrar:
+
+```
+❌ MCP de Atlassian no está conectado.
+
+Para usar /task necesitás conectarlo primero:
+  1. Abrí claude.ai/settings
+  2. Andá a Integrations
+  3. Buscá "Atlassian" y hacé clic en Connect
+  4. Autenticá con tu cuenta de Atom (antony.hernandez@atomchat.io)
+  5. Reiniciá esta sesión de Claude Code
+
+Sin este MCP, el skill no puede leer Jira ni Confluence.
+```
+
+No continuar hasta que el pre-flight pase.
+
 ## Fase 1 — Discovery (en paralelo donde sea posible)
 
 **1. Task** — `getJiraIssue(cloudId: "atomchat.atlassian.net", issueIdOrKey, responseContentFormat: "markdown", fields: ["summary","description","parent","comment","issuetype"])`
