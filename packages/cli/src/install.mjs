@@ -93,20 +93,29 @@ async function buildClaudeMd() {
   return base.replace(TECH_PLACEHOLDER, sections.join("\n"));
 }
 
+function extractVersion(content) {
+  const match = content.match(/^---[\s\S]*?version:\s*(\S+)[\s\S]*?---/);
+  return match ? match[1] : null;
+}
+
 async function install() {
   // 1. Crear directorios necesarios
   mkdirSync(join(ROOT, ".claude/skills/task"), { recursive: true });
 
   // 2. Copiar skills
+  const skillContent = await readTemplate("skills/task/SKILL.md");
+  const skillVersion = extractVersion(skillContent);
+  const versionLabel = skillVersion ? dim(` v${skillVersion}`) : "";
+
   const skills = [
-    ["skills/task/SKILL.md",         ".claude/skills/task/SKILL.md"],
-    ["skills/task/brief-template.md", ".claude/skills/task/brief-template.md"],
+    ["skills/task/SKILL.md",         ".claude/skills/task/SKILL.md",         skillContent],
+    ["skills/task/brief-template.md", ".claude/skills/task/brief-template.md", null],
   ];
-  for (const [src, dest] of skills) {
-    const content = await readTemplate(src);
+  for (const [src, dest, preloaded] of skills) {
+    const content = preloaded ?? await readTemplate(src);
     writeFileSync(join(ROOT, dest), content);
-    console.log(green("  ✓ skill /task"), `→ ${dest}`);
   }
+  console.log(green("  ✓ skill /task") + versionLabel + ` → .claude/skills/task/`);
 
   // 3. Crear o actualizar CLAUDE.md (con sección Atomic delimitada)
   const claudeMdPath = join(ROOT, "CLAUDE.md");

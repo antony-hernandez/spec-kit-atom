@@ -1,5 +1,6 @@
 ---
 name: task
+version: 1.0.0
 description: Use when starting work on any Jira task — before reading code, writing code, or asking the user for context.
 ---
 
