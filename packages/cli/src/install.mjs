@@ -6,6 +6,10 @@
  */
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
+
+const ATOMIC_START = "<!-- ATOMIC:START — no editar esta sección manualmente -->";
+const ATOMIC_END = "<!-- ATOMIC:END -->";
+const escapeRegex = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 import { resolve, dirname, join } from "path";
 import { fileURLToPath } from "url";
 
@@ -61,13 +65,25 @@ async function install() {
 
   // 3. Crear o actualizar CLAUDE.md
   const claudeMdPath = join(ROOT, "CLAUDE.md");
-  const claudeMdContent = await readTemplate("CLAUDE.md");
+  const atomicContent = await readTemplate("CLAUDE.md");
+  const wrappedSection = `${ATOMIC_START}\n${atomicContent}\n${ATOMIC_END}`;
+
   if (!existsSync(claudeMdPath)) {
-    writeFileSync(claudeMdPath, claudeMdContent);
+    writeFileSync(claudeMdPath, wrappedSection + "\n");
     console.log(green("  ✓ CLAUDE.md creado"));
   } else {
-    console.log(yellow("  ~ CLAUDE.md ya existe — no sobreescrito"));
-    console.log(`    Revisa el repo de Atomic para ver qué agregar manualmente.`);
+    const existing = readFileSync(claudeMdPath, "utf8");
+    if (existing.includes(ATOMIC_START)) {
+      const updated = existing.replace(
+        new RegExp(`${escapeRegex(ATOMIC_START)}[\\s\\S]*?${escapeRegex(ATOMIC_END)}`),
+        wrappedSection
+      );
+      writeFileSync(claudeMdPath, updated);
+      console.log(green("  ✓ sección Atomic actualizada en CLAUDE.md"));
+    } else {
+      writeFileSync(claudeMdPath, existing.trimEnd() + "\n\n" + wrappedSection + "\n");
+      console.log(green("  ✓ sección Atomic agregada a CLAUDE.md existente"));
+    }
   }
 
   // 4. Configurar MCPs en .claude/settings.json
