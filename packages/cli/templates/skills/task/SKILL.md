@@ -1,6 +1,6 @@
 ---
 name: task
-version: 1.4.0
+version: 1.5.0
 description: Use when starting work on any Jira task — before reading code, writing code, or asking the user for context.
 ---
 
@@ -49,18 +49,36 @@ No continuar hasta que el pre-flight pase.
 **3. Spec técnica** — `getConfluencePage` + footer comments + inline comments (en paralelo). Extraer cambios técnicos y criterios filtrados por `TASK_TYPE`. Buscar link a FRD en el body.
 
 **4. FRD** (si existe) — `getConfluencePage` + comentarios. Identificar sección `### HU-XX` correspondiente. Extraer Figma node-id específico de esa sección (FE) y criterios funcionales.
+- Si `TASK_TYPE = FE` y no se encontró ningún Figma node-id → registrar como `⚠️ Figma ausente` en el brief. No bloqueante pero debe quedar visible.
 
 ## Fase 2 — Análisis
 
 **5. Cross-check** — comparar criterios del FRD vs task/HU. Si hay mismatches → presentar al usuario y resolver antes de continuar. Si no → silencioso.
 
-**6. Gate de reuso** — aplicar las reglas de `## Implementación` en CLAUDE.md. Resultados van en la sección REUSO del brief.
+**6. Gate de reuso** — para cada entidad técnica mencionada en el spec (componentes, servicios, mappers, tipos), ejecutar en paralelo:
+```
+codegraph_search("<NombreExacto>")
+codegraph_context(task: "<descripción del cambio>")
+```
+Ningún código nuevo hasta que CodeGraph confirme que no existe. Resultados van en la sección REUSO del brief.
 
 ## Fase 3 — Brief
 
 **7.** Compilar brief usando `brief-template.md`. Incluir sección REUSO.
 
-**8.** STOP — presentar el brief completo y preguntar explícitamente: _"¿Algo que ajustar antes de empezar?"_ No continuar hasta recibir respuesta.
+**8.** STOP — presentar el brief comenzando con un **bloque de alineamiento**:
+
+```
+## Entendimiento
+
+Objetivo del task: <una oración que resuma qué problema resuelve este cambio y por qué importa>
+Impacto técnico: <qué parte del sistema se toca y en qué dirección>
+Fuera de scope: <qué no se va a hacer aunque esté relacionado>
+
+¿Esto refleja lo que esperás de esta tarea? ¿Algo que ajustar antes de empezar?
+```
+
+No continuar hasta recibir respuesta. Si el usuario corrige el entendimiento → revisar el brief antes de continuar.
 
 ## Fase 4 — Contexto git
 
@@ -79,12 +97,23 @@ Nombre de rama sugerido: `<TICKET-ID>/<descripción-corta-kebab-case>` (ej: `CV-
 
 ## Fase 5 — Plan de implementación
 
-**10.** Generar lista de tareas atómicas ordenadas por dependencia. Formato exacto:
+**10.** Verificar rutas del plan con CodeGraph antes de presentarlo:
+```
+codegraph_search("<NombreArchivo>")   // confirmar que el archivo existe
+```
+No incluir un archivo en el plan si CodeGraph no lo encuentra — preguntar al usuario antes.
+
+Generar lista de tareas atómicas ordenadas por dependencia. Formato exacto:
 
 ```
-[ ] T1: <descripción del cambio> — `path/al/archivo.ts` (modify)
-[ ] T2: <descripción del cambio> — `path/al/archivo.ts` (modify) ← depende de T1
-[ ] T3: <descripción del cambio> — `path/al/archivo.spec.ts` (create)
+[ ] T1: <qué cambia> — `path/al/archivo.ts` (modify)
+        Por qué: <una línea explicando el motivo técnico de este cambio>
+
+[ ] T2: <qué cambia> — `path/al/archivo.ts` (modify) ← depende de T1
+        Por qué: <una línea>
+
+[ ] T3: <qué cambia> — `path/al/archivo.spec.ts` (create)
+        Por qué: verificar que <comportamiento esperado> funciona bajo <condición>
 ```
 
 Reglas del plan:
@@ -139,8 +168,9 @@ No continuar con `Tn+1` hasta que `Tn` tenga commit.
 | Tomar el Figma genérico del header del FRD | Buscar la sección `### HU-XX` y extraer el node-id de ahí |
 | Mezclar cambios FE y BE en el mismo brief | Filtrar estrictamente por `TASK_TYPE` desde la Spec Técnica |
 | Buscar "Documento fuente" en remote links de Jira | Está en el body de la HU — parsear el texto de `description` |
-| Saltear el paso 8 si el brief quedó completo | El STOP es obligatorio siempre |
+| Saltear el paso 8 si el brief quedó completo | El STOP es obligatorio siempre — el bloque de alineamiento también |
 | Saltear el paso 11 si el plan parece obvio | El STOP es obligatorio siempre |
+| Incluir archivos en el plan sin verificarlos con CodeGraph | Verificar rutas antes de presentar el plan |
 | Empezar a codear sin verificar la rama (paso 9) | Verificar git status y rama antes de cualquier cambio |
 | Continuar con Tn+1 antes de commitear Tn | Cada tarea debe tener commit antes de avanzar |
 | Declarar completo sin pasar por verificación | La verificación goal-backward es obligatoria |

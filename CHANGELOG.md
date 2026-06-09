@@ -18,6 +18,22 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.9.0] - 2026-06-08
+
+### Added
+- Skill `/task` v1.5.0: alineamiento + verificación de rutas + Figma flag
+  - Bloque "Entendimiento" en STOP del paso 8: objetivo, impacto técnico, fuera de scope — el usuario confirma antes de continuar
+  - Paso 10: verificar rutas del plan con CodeGraph antes de presentarlo — no incluir archivos que no existen
+  - "Por qué" en cada tarea del plan: motivo técnico visible, no solo qué archivo se toca
+  - Paso 4: si task es FE y no hay Figma node-id → registrar como `⚠️ Figma ausente` en el brief
+- Skill `/spec` v1.1.0: alineamiento + Figma + umbral de vaguedad + calidad de doc + Confluence update seguro
+  - Fase "Alineamiento" obligatoria post-ingesta: resumen de entendimiento del FRD antes de cualquier análisis
+  - Extracción de links Figma del FRD mapeados por HU
+  - Umbral de vaguedad: HU con >50% de ACs bloqueantes → marcar como no lista para spec
+  - Tabla de archivos con columna "Por qué": razonamiento visible en cada cambio
+  - Fase 6 segura: leer cuerpo completo → identificar sección → reemplazar solo esa parte → resubmitir todo
+  - Fase 4 de clarificación: explica el impacto técnico de cada pregunta para que el usuario entienda por qué importa
+
 ## [0.8.0] - 2026-06-08
 
 ### Added
