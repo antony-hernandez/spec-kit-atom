@@ -1,6 +1,6 @@
 ---
 name: task
-version: 1.1.0
+version: 1.2.0
 description: Use when starting work on any Jira task — before reading code, writing code, or asking the user for context.
 ---
 
@@ -51,9 +51,24 @@ No continuar hasta que el pre-flight pase.
 
 **8.** STOP — presentar el brief completo y preguntar explícitamente: _"¿Algo que ajustar antes de empezar?"_ No continuar hasta recibir respuesta.
 
-## Fase 4 — Plan de implementación
+## Fase 4 — Contexto git
 
-**9.** Generar lista de tareas atómicas ordenadas por dependencia. Formato exacto:
+**9.** Verificar estado del repositorio antes de tocar código:
+
+```bash
+git status              # hay cambios sin commitear?
+git branch --show-current   # en qué rama estamos?
+```
+
+- Si hay cambios sin commitear → **STOP**: _"Hay cambios sin commitear en `<rama>`. ¿Los stasheamos, los commiteamos o preferís manejarlos vos antes de continuar?"_
+- Si la rama actual es `main`, `master` o `develop` → **STOP**: _"Estás en `<rama>`. Para este task la rama debería ser `<ID>/<descripción-corta>`. ¿La creo y hago checkout?"_
+- Si la rama ya corresponde al task → confirmar en voz alta: _"Trabajando en rama `<rama>` ✓"_ y continuar.
+
+Nombre de rama sugerido: `<TICKET-ID>/<descripción-corta-kebab-case>` (ej: `CV-641/last-group-static-variable`). Esperar confirmación del usuario si se va a crear una nueva.
+
+## Fase 5 — Plan de implementación
+
+**10.** Generar lista de tareas atómicas ordenadas por dependencia. Formato exacto:
 
 ```
 [ ] T1: <descripción del cambio> — `path/al/archivo.ts` (modify)
@@ -67,11 +82,11 @@ Reglas del plan:
 - Incluir tests como tareas explícitas, no como afterthought
 - No agrupar varios archivos en una tarea si pueden fallar de forma independiente
 
-**10.** STOP — presentar el plan y preguntar: _"¿Ajustamos el plan antes de ejecutar?"_ No continuar hasta recibir confirmación.
+**11.** STOP — presentar el plan y preguntar: _"¿Ajustamos el plan antes de ejecutar?"_ No continuar hasta recibir confirmación.
 
-## Fase 5 — Ejecución
+## Fase 6 — Ejecución
 
-**11.** Ejecutar una tarea a la vez, en orden:
+**12.** Ejecutar una tarea a la vez, en orden:
 
 Por cada tarea `[ ] Tn`:
 1. Implementar el cambio
@@ -81,9 +96,9 @@ Por cada tarea `[ ] Tn`:
 
 No continuar con `Tn+1` hasta que `Tn` tenga commit.
 
-## Fase 6 — Verificación
+## Fase 7 — Verificación
 
-**12.** Por cada criterio de aceptación del brief, verificar goal-backward:
+**13.** Por cada criterio de aceptación del brief, verificar goal-backward:
 
 ```
 ✅ AC-1: <descripción> — implementado en T2 (path/archivo.ts:45)
@@ -91,9 +106,19 @@ No continuar con `Tn+1` hasta que `Tn` tenga commit.
 ❌ AC-3: <descripción> — no implementado
 ```
 
-**13.** Si hay ⚠️ o ❌ → implementar lo que falta antes de reportar como completo. No declarar la tarea terminada hasta que todos los ACs sean ✅.
+**14.** Si hay ⚠️ o ❌ → implementar lo que falta antes de continuar. No pasar al cierre hasta que todos los ACs sean ✅.
 
-**14.** Reportar resumen final: N tareas completadas, N commits, todos los ACs verificados.
+## Fase 8 — Cierre
+
+**15.** Todos los ACs ✅. Preguntar: _"¿Hacemos push de la rama `<rama>`?"_
+- Si sí → `git push -u origin <rama>` (o `git push` si ya tiene upstream)
+- Reportar URL del branch en GitHub
+
+**16.** Preguntar: _"¿Abrimos un PR?"_
+- Si sí → crear con `gh pr create`:
+  - **Título**: `[<TICKET-ID>] <resumen del brief en una línea>`
+  - **Body**: descripción de cambios del brief + checklist de ACs + link al ticket de Jira
+- Reportar URL del PR al usuario
 
 ## Errores comunes
 
@@ -103,9 +128,11 @@ No continuar con `Tn+1` hasta que `Tn` tenga commit.
 | Mezclar cambios FE y BE en el mismo brief | Filtrar estrictamente por `TASK_TYPE` desde la Spec Técnica |
 | Buscar "Documento fuente" en remote links de Jira | Está en el body de la HU — parsear el texto de `description` |
 | Saltear el paso 8 si el brief quedó completo | El STOP es obligatorio siempre |
-| Saltear el paso 10 si el plan parece obvio | El STOP es obligatorio siempre |
+| Saltear el paso 11 si el plan parece obvio | El STOP es obligatorio siempre |
+| Empezar a codear sin verificar la rama (paso 9) | Verificar git status y rama antes de cualquier cambio |
 | Continuar con Tn+1 antes de commitear Tn | Cada tarea debe tener commit antes de avanzar |
-| Declarar completo sin pasar por verificación | La verificación goal-backward es obligatoria, no opcional |
+| Declarar completo sin pasar por verificación | La verificación goal-backward es obligatoria |
+| Crear PR sin esperar confirmación del usuario | Los pasos 15 y 16 son preguntas, no acciones automáticas |
 | Subir directo a la Spec sin pasar por la HU | El link al spec vive en la HU, no en el task |
 
 ## Cuándo NO usar

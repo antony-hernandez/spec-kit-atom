@@ -18,6 +18,13 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [0.5.0] - 2026-06-08
+
+### Added
+- Skill `/task` v1.2.0: flujo git completo integrado al proceso
+  - **Fase 4 — Contexto git**: verifica rama y cambios sin commitear antes de tocar código. Sugiere nombre de rama `CV-XXX/descripción` y pide confirmación si hay que crearla
+  - **Fase 8 — Cierre**: pregunta si hacer push, luego si abrir PR. PR generado con título, descripción del brief y checklist de ACs
+
 ## [0.4.0] - 2026-06-08
 
 ### Added

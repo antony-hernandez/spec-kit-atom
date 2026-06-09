@@ -1,11 +1,12 @@
 ---
 name: task
+version: 1.2.0
 description: Use when starting work on any Jira task — before reading code, writing code, or asking the user for context.
 ---
 
 # Task Discovery
 
-Dado un ID de Jira (task o HU), arma el contexto completo antes de implementar. Sigue las fases en orden. No leer código ni preguntar al usuario hasta terminar el discovery.
+Dado un ID de Jira (task o HU), arma el contexto completo y ejecuta la implementación en fases. Sigue las fases en orden. No leer código ni preguntar al usuario hasta terminar el discovery.
 
 ## Pre-flight — verificar MCPs antes de empezar
 
@@ -44,13 +45,80 @@ No continuar hasta que el pre-flight pase.
 
 **6. Gate de reuso** — aplicar las reglas de `## Implementación` en CLAUDE.md. Resultados van en la sección REUSO del brief.
 
-## Fase 3 — Brief e implementación
+## Fase 3 — Brief
 
 **7.** Compilar brief usando `brief-template.md`. Incluir sección REUSO.
 
 **8.** STOP — presentar el brief completo y preguntar explícitamente: _"¿Algo que ajustar antes de empezar?"_ No continuar hasta recibir respuesta.
 
-**9.** Implementar siguiendo estrictamente el brief y las reglas de CLAUDE.md.
+## Fase 4 — Contexto git
+
+**9.** Verificar estado del repositorio antes de tocar código:
+
+```bash
+git status              # hay cambios sin commitear?
+git branch --show-current   # en qué rama estamos?
+```
+
+- Si hay cambios sin commitear → **STOP**: _"Hay cambios sin commitear en `<rama>`. ¿Los stasheamos, los commiteamos o preferís manejarlos vos antes de continuar?"_
+- Si la rama actual es `main`, `master` o `develop` → **STOP**: _"Estás en `<rama>`. Para este task la rama debería ser `<ID>/<descripción-corta>`. ¿La creo y hago checkout?"_
+- Si la rama ya corresponde al task → confirmar en voz alta: _"Trabajando en rama `<rama>` ✓"_ y continuar.
+
+Nombre de rama sugerido: `<TICKET-ID>/<descripción-corta-kebab-case>` (ej: `CV-641/last-group-static-variable`). Esperar confirmación del usuario si se va a crear una nueva.
+
+## Fase 5 — Plan de implementación
+
+**10.** Generar lista de tareas atómicas ordenadas por dependencia. Formato exacto:
+
+```
+[ ] T1: <descripción del cambio> — `path/al/archivo.ts` (modify)
+[ ] T2: <descripción del cambio> — `path/al/archivo.ts` (modify) ← depende de T1
+[ ] T3: <descripción del cambio> — `path/al/archivo.spec.ts` (create)
+```
+
+Reglas del plan:
+- Una tarea = un archivo o un cambio cohesivo y reversible
+- Ordenar de menor a mayor dependencia (las bases primero)
+- Incluir tests como tareas explícitas, no como afterthought
+- No agrupar varios archivos en una tarea si pueden fallar de forma independiente
+
+**11.** STOP — presentar el plan y preguntar: _"¿Ajustamos el plan antes de ejecutar?"_ No continuar hasta recibir confirmación.
+
+## Fase 6 — Ejecución
+
+**12.** Ejecutar una tarea a la vez, en orden:
+
+Por cada tarea `[ ] Tn`:
+1. Implementar el cambio
+2. Commit atómico: `<tipo>(<scope>): <descripción> [<TICKET-ID>]`
+3. Marcar `[x] Tn` en el plan y reportar progreso: `✓ T1/3 completada`
+4. Si aparece algo no previsto (archivo diferente al esperado, dependencia oculta, comportamiento inesperado) → **STOP**, describir la desviación y esperar decisión antes de continuar
+
+No continuar con `Tn+1` hasta que `Tn` tenga commit.
+
+## Fase 7 — Verificación
+
+**13.** Por cada criterio de aceptación del brief, verificar goal-backward:
+
+```
+✅ AC-1: <descripción> — implementado en T2 (path/archivo.ts:45)
+⚠️ AC-2: <descripción> — parcial: falta X
+❌ AC-3: <descripción> — no implementado
+```
+
+**14.** Si hay ⚠️ o ❌ → implementar lo que falta antes de continuar. No pasar al cierre hasta que todos los ACs sean ✅.
+
+## Fase 8 — Cierre
+
+**15.** Todos los ACs ✅. Preguntar: _"¿Hacemos push de la rama `<rama>`?"_
+- Si sí → `git push -u origin <rama>` (o `git push` si ya tiene upstream)
+- Reportar URL del branch en GitHub
+
+**16.** Preguntar: _"¿Abrimos un PR?"_
+- Si sí → crear con `gh pr create`:
+  - **Título**: `[<TICKET-ID>] <resumen del brief en una línea>`
+  - **Body**: descripción de cambios del brief + checklist de ACs + link al ticket de Jira
+- Reportar URL del PR al usuario
 
 ## Errores comunes
 
@@ -59,9 +127,14 @@ No continuar hasta que el pre-flight pase.
 | Tomar el Figma genérico del header del FRD | Buscar la sección `### HU-XX` y extraer el node-id de ahí |
 | Mezclar cambios FE y BE en el mismo brief | Filtrar estrictamente por `TASK_TYPE` desde la Spec Técnica |
 | Buscar "Documento fuente" en remote links de Jira | Está en el body de la HU — parsear el texto de `description` |
-| Saltear el paso 8 si el brief quedó completo | El STOP es obligatorio siempre, independientemente de la calidad del brief |
+| Saltear el paso 8 si el brief quedó completo | El STOP es obligatorio siempre |
+| Saltear el paso 11 si el plan parece obvio | El STOP es obligatorio siempre |
+| Empezar a codear sin verificar la rama (paso 9) | Verificar git status y rama antes de cualquier cambio |
+| Continuar con Tn+1 antes de commitear Tn | Cada tarea debe tener commit antes de avanzar |
+| Declarar completo sin pasar por verificación | La verificación goal-backward es obligatoria |
+| Crear PR sin esperar confirmación del usuario | Los pasos 15 y 16 son preguntas, no acciones automáticas |
 | Subir directo a la Spec sin pasar por la HU | El link al spec vive en la HU, no en el task |
 
 ## Cuándo NO usar
 
-- Si el brief de esta tarea ya está cargado en la sesión actual → no re-correr el skill, usarlo directamente.
+- Si el brief de esta tarea ya está cargado en la sesión actual → no re-correr el discovery, retomar desde la fase correspondiente.
