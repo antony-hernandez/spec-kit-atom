@@ -1,7 +1,8 @@
 {
-  "name": "atomic",
-  "skills": [
-    "./packages/cli/templates/skills/task",
-    "./packages/cli/templates/skills/spec"
-  ]
+  "name": "ads",
+  "description": "Atom Developer Skills — spec-driven development assistant for the Atom team",
+  "author": {
+    "name": "Atom Team",
+    "email": "antony.hernandez@atomchat.io"
+  }
 }
