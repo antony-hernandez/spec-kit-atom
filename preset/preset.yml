@@ -4,9 +4,9 @@ preset:
   id: "atom"
   name: "Atom Developer Skills"
   version: "1.0.0"
-  description: "Atom codebase context: Jira+Confluence+Figma ingestion, Angular/TypeScript rules, post-implement verification"
+  description: "Atom codebase steering: constitution rules (Angular/TypeScript/CodeGraph) and Atom sections in spec/plan templates"
   author: "Atom Team"
-  repository: "https://github.com/atomchat/spec-kit-preset-atom"
+  repository: "https://github.com/antony-hernandez/spec-kit-atom"
   license: "MIT"
 
 requires:
@@ -14,41 +14,27 @@ requires:
 
 provides:
   templates:
-    - type: "command"
-      name: "speckit.atom.context"
-      file: "commands/speckit.atom.context.md"
-      description: "Fetch Jira+Confluence+Figma context for an Atom task"
-
-    - type: "command"
-      name: "speckit.specify"
-      file: "commands/speckit.specify.md"
-      description: "Atom-aware specify: loads Jira context if task ID is provided"
-      strategy: "wrap"
-      replaces: "speckit.specify"
-
-    - type: "command"
-      name: "speckit.implement"
-      file: "commands/speckit.implement.md"
-      description: "Atom-aware implement: TypeScript check + AC verify + push/PR after implementation"
-      strategy: "wrap"
-      replaces: "speckit.implement"
+    - type: "template"
+      name: "constitution-template"
+      file: "templates/constitution-template.md"
+      description: "Atom constitution — reglas no negociables del codebase"
+      replaces: "constitution-template"
 
     - type: "template"
       name: "spec-template"
       file: "templates/spec-template.md"
-      description: "Atom sections appended to spec template"
+      description: "Secciones de Atom agregadas al spec (stack, Figma, contratos TS, blast radius)"
       strategy: "append"
 
     - type: "template"
       name: "plan-template"
       file: "templates/plan-template.md"
-      description: "Atom sections appended to plan template"
+      description: "Constraints de Atom agregados al plan (concreción, verificación, commits, CodeGraph)"
       strategy: "append"
 
 tags:
   - "atom"
-  - "atlassian"
   - "angular"
   - "typescript"
-  - "jira"
-  - "confluence"
+  - "codegraph"
+  - "atlassian"

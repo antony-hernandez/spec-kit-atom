@@ -2,7 +2,7 @@
 
 ## Contexto de Atom
 
-> Esta sección es completada por el agente al correr `/speckit-atom-context` o `/speckit-specify <TICKET-ID>`.
+> Completá esta sección con el contexto del task (Jira / Confluence / Figma) antes de implementar.
 
 **Task ID:** <!-- e.g. CV-599 -->
 **Task type:** <!-- Frontend | Backend | Mobile -->
