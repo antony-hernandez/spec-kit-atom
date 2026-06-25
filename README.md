@@ -13,7 +13,7 @@ spec-kit distingue tres mecanismos. Atom usa los tres, en fases:
 | Pieza | Mecanismo spec-kit | Qué aporta | Estado |
 |-------|--------------------|------------|--------|
 | **Preset `atom`** | overridea templates/commands core | Constitution con las reglas de Atom + secciones de Atom en spec/plan | ✅ Fase 1 |
-| **Extensión `atom`** | agrega comandos + hooks nuevos | `speckit.atom.context` (ingesta Jira+Confluence+Figma) + quality gates post-implement | ⏳ Fase 2 |
+| **Extensión `atom`** | agrega comandos + hooks nuevos | `speckit.atom.context` (ingesta Jira+Confluence+Figma) + quality gates post-implement | ✅ Fase 2 |
 | **Bundle `atom`** | compone extensión + preset | Una sola instalación (`specify bundle install`) | ⏳ Fase 3 |
 
 > Un **preset** solo puede *overridear* lo que ya existe en spec-kit — no agrega comandos nuevos. Los comandos nuevos (la ingesta) son trabajo de una **extensión**. Por eso el faseo.
@@ -51,6 +51,28 @@ Verificá con `specify preset list`. Al correr `/speckit.constitution`, `/specki
 
 ---
 
+## Extensión `atom` (fase 2)
+
+Agrega lo que spec-kit no tiene — la ingesta de contexto de Atom y los quality gates:
+
+| Comando | Qué hace |
+|---------|----------|
+| `speckit.atom.context <CV-599>` | Fetch Jira + HU + Spec Técnica (Confluence) + Figma → escribe `.specify/memory/atom-context.md` que `/speckit.specify` consume |
+| `speckit.atom.verify` | Typecheck de TypeScript + verificación de los ACs contra la implementación |
+| `speckit.atom.pr` | Crea el PR con título `[TICKET-ID]` y checklist de ACs |
+
+Enganchados con hooks: `before_specify` → `context` (opcional, pregunta), `after_implement` → `verify` (p5) + `pr` (p20, opcional).
+
+### Instalación
+
+```bash
+specify extension add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/tags/v1.0.0.zip
+# o en desarrollo:
+specify extension add ./extension --dev
+```
+
+---
+
 ## Estructura del repo
 
 ```
@@ -61,10 +83,16 @@ preset/                          ← Fase 1 — preset de spec-kit
     spec-template.md             ← secciones de Atom para el spec
     plan-template.md             ← constraints de Atom para el plan
   README.md
+extension/                       ← Fase 2 — extensión de spec-kit
+  extension.yml                  ← manifest (3 comandos + hooks)
+  commands/
+    speckit.atom.context.md      ← ingesta Jira→Confluence→Figma
+    speckit.atom.verify.md       ← typecheck + verificación de ACs
+    speckit.atom.pr.md           ← creación de PR
 skills/                          ← Legacy / stopgap — skills ads:task y ads:spec
-  task/SKILL.md                  ← ingesta Jira→Confluence→Figma (prototipo de la extensión fase 2)
+  task/SKILL.md                  ← prototipo de la ingesta (origen de speckit.atom.context)
   spec/SKILL.md                  ← FRD → spec técnica
-.planning/                       ← diseño, plan y spikes
+.planning/                       ← diseño y spikes
 ```
 
 ### `skills/` — stopgap hasta la fase 2

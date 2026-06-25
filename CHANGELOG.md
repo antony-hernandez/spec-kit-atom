@@ -25,6 +25,7 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ### Added
 - Preset `atom` (fase 1): `constitution-template` (replace) con las reglas de Atom + `spec-template`/`plan-template` (append) con las secciones de Atom.
+- Extensión `atom` (fase 2): comandos `speckit.atom.context` (ingesta Jira+Confluence+Figma), `speckit.atom.verify` (typecheck + ACs) y `speckit.atom.pr`, enganchados con hooks `before_specify` y `after_implement`.
 
 ### Removed
 - CLI npm legacy: `packages/cli/` (installer, hooks, templates), `package.json`, `.claude-plugin/plugin.json`. Instalación ahora vía `specify preset add`.

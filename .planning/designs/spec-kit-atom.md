@@ -105,8 +105,9 @@ Mismo repo, renombrado: `antony-hernandez/spec-kit-atom` (público, instalable v
 - [x] Los templates de Atom quedan en lugar para `/speckit.constitution`, `/speckit.specify`, `/speckit.plan` (confirmado por la resolución de capas)
 
 ### Fase 2 (extensión)
-- [ ] `speckit.atom.context CV-599` fetchea Jira+Confluence+Figma y deja contexto utilizable
-- [ ] Hook `after_implement` corre typecheck + verifica ACs + ofrece PR
+- [x] `extension.yml` válido; `specify extension add ./extension --dev` registra los 3 comandos como skills de Claude (`.claude/skills/speckit-atom-*`) y 2 hooks (`before_specify`, `after_implement`) en `.specify/extensions.yml` — validado e2e con spec-kit v0.11.9
+- [ ] `speckit.atom.context CV-599` fetchea Jira+Confluence+Figma y deja contexto utilizable — pendiente: runtime contra un ticket real (requiere MCP Atlassian + ticket)
+- [ ] Hook `after_implement` corre typecheck + verifica ACs + ofrece PR — pendiente: runtime en un proyecto con implementación
 
 ### Fase 3 (bundle)
 - [ ] `specify bundle install atom` instala extensión + preset en un paso
