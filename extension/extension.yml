@@ -1,0 +1,55 @@
+schema_version: "1.0"
+
+extension:
+  id: atom
+  name: "Atom Context & Quality Gates"
+  version: "1.0.0"
+  description: "Ingesta de contexto Jira+Confluence+Figma para el flujo SDD, y quality gates post-implement (typecheck, verificación de ACs, PR)"
+  author: "Atom Team"
+  repository: "https://github.com/antony-hernandez/spec-kit-atom"
+  license: "MIT"
+
+requires:
+  speckit_version: ">=0.9.0"
+  tools:
+    - name: git
+      required: false
+
+provides:
+  commands:
+    - name: speckit.atom.context
+      file: commands/speckit.atom.context.md
+      description: "Fetch Jira+Confluence+Figma para un task de Atom y escribir el contexto en .specify/memory/atom-context.md"
+
+    - name: speckit.atom.verify
+      file: commands/speckit.atom.verify.md
+      description: "Typecheck de TypeScript + verificación de los criterios de aceptación contra la implementación"
+
+    - name: speckit.atom.pr
+      file: commands/speckit.atom.pr.md
+      description: "Crear el PR del feature con título [TICKET-ID] y checklist de ACs"
+
+hooks:
+  before_specify:
+    command: "speckit.atom.context"
+    optional: true
+    prompt: "¿Cargar el contexto de Atom (Jira+Confluence+Figma) antes de especificar?"
+    description: "Ingesta el contexto del task de Jira antes de /specify"
+
+  after_implement:
+    - command: "speckit.atom.verify"
+      priority: 5
+      optional: false
+      description: "Typecheck + verificación de ACs tras implementar"
+    - command: "speckit.atom.pr"
+      priority: 20
+      optional: true
+      prompt: "¿Abrir el PR de este feature?"
+      description: "Crear PR con [TICKET-ID]"
+
+tags:
+  - "atom"
+  - "jira"
+  - "confluence"
+  - "figma"
+  - "atlassian"
