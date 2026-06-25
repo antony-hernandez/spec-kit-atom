@@ -8,6 +8,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
 import { resolve, dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { spawnSync } from "child_process";
 
 const ADS_START = "<!-- ADS:START — no editar esta sección manualmente -->";
 const ADS_END = "<!-- ADS:END -->";
@@ -222,6 +223,35 @@ async function install() {
   console.log("    ads:task CV-123          ← carga el brief completo de una tarea");
   console.log("    ads:spec <URL_FRD>       ← convierte un FRD en spec técnica + backlog\n");
 }
+
+function specifyAvailable() {
+  const result = spawnSync("specify", ["--version"], { stdio: "ignore" });
+  return result.status === 0;
+}
+
+if (specifyAvailable()) {
+  console.log(bold("⚡ Atom Developer Skills — usando spec-kit como base\n"));
+  console.log("  Ejecutando: specify init --preset atom --integration claude\n");
+
+  const result = spawnSync(
+    "specify",
+    ["init", "--here", "--preset", "atom", "--integration", "claude"],
+    { stdio: "inherit" }
+  );
+
+  if (result.status !== 0) {
+    console.error("\n❌ Error al inicializar el preset. Verificar que spec-kit está instalado:");
+    console.error("   pip install spec-kit\n");
+    process.exit(1);
+  }
+
+  console.log(green("\n✓ Atom Developer Skills instalado vía spec-kit\n"));
+  process.exit(0);
+}
+
+// Fallback: flujo legacy si specify no está disponible
+console.log(yellow("⚠️  spec-kit no encontrado — usando instalación legacy\n"));
+console.log("   Para usar la versión completa: pip install spec-kit\n");
 
 install().catch((err) => {
   console.error(`\n  ✗ Error durante la instalación: ${err.message}\n`);
