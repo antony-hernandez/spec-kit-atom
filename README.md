@@ -27,6 +27,34 @@ El installer:
 
 ---
 
+## Desinstalar
+
+No hay comando de uninstall — ADS deja rastros acotados y se quitan a mano. Desde la raíz del proyecto:
+
+```bash
+# 1. Skills
+rm -rf .claude/skills/task .claude/skills/spec
+
+# 2. Sección ADS en CLAUDE.md
+#    Si el archivo es 100% bloque ADS → borralo entero:
+rm -f CLAUDE.md
+#    Si tiene contenido propio → borrá solo el bloque entre los marcadores
+#    <!-- ADS:START --> … <!-- ADS:END -->  (o los legacy <!-- ATOMIC:START --> … <!-- ATOMIC:END -->)
+
+# 3. MCP CodeGraph en .claude/settings.json → quitar la entrada "codegraph"
+#    de mcpServers. Si settings.json quedó 100% ADS, borralo:
+rm -f .claude/settings.json
+
+# 4. Legacy (instalaciones viejas): hook de auto-update
+rm -f .claude/hooks/check-atomic-updates.sh
+#    y el bloque hooks.SessionStart que lo invoca en settings.json
+```
+
+> `.claude/settings.local.json` **no** es de ADS (son tus preferencias locales de Claude Code) — no lo borres.
+> El índice de CodeGraph (`.codegraph/`) tampoco es de ADS; borralo solo si querés liberar espacio.
+
+---
+
 ## MCPs requeridos
 
 | MCP | Para qué | Cómo instalar |

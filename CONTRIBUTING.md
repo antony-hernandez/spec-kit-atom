@@ -54,6 +54,19 @@ El pre-push hook bloquea el push si falta alguno de estos pasos.
 3. Agregar label en `SECTION_LABELS`
 4. Bump MINOR en `package.json` + entrada en `CHANGELOG.md`
 
+## Qué instala el CLI (referencia para uninstall)
+
+`install()` en `packages/cli/src/install.mjs` deja exactamente estos rastros por proyecto. Cualquier desinstalación manual debe revertirlos:
+
+| Artefacto | Origen |
+|-----------|--------|
+| `.claude/skills/task/`, `.claude/skills/spec/` | array `skills` en `install()` |
+| Bloque `ADS:START…ADS:END` en `CLAUDE.md` | `buildClaudeMd()` + marcadores |
+| `mcpServers.codegraph` en `.claude/settings.json` | paso de configuración de MCP |
+| `.claude/hooks/check-atomic-updates.sh` + `hooks.SessionStart` | **legacy** — versiones viejas; el installer actual ya no lo crea |
+
+Nunca tocar `.claude/settings.local.json` (preferencias locales del usuario) ni `.codegraph/` (índice de CodeGraph). La detección de stack lee `package.json` y, para el layout de Firebase, `functions/package.json`.
+
 ## Convención de commits
 
 ```

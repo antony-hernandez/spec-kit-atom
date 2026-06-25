@@ -18,6 +18,18 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [Unreleased]
+
+### Fixed
+- `detectProjectTypes` ahora detecta backend en repos con layout de Firebase (`package.json` en `functions/`, no en la raíz). Antes caían al fallback de "instalar todas las secciones".
+
+### Added
+- `ads install` envuelve `specify init --preset atom --integration claude` cuando spec-kit está disponible, con fallback al flujo legacy si no lo está.
+- README: sección **Desinstalar** con los pasos manuales (no hay comando de uninstall).
+- CONTRIBUTING: tabla de referencia de qué instala el CLI, para guiar la desinstalación manual.
+
+---
+
 ## [1.0.0] — 2026-06-10
 
 ### Breaking Changes
