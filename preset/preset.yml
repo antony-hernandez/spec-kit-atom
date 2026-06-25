@@ -1,0 +1,54 @@
+schema_version: "1.0"
+
+preset:
+  id: "atom"
+  name: "Atom Developer Skills"
+  version: "1.0.0"
+  description: "Atom codebase context: Jira+Confluence+Figma ingestion, Angular/TypeScript rules, post-implement verification"
+  author: "Atom Team"
+  repository: "https://github.com/atomchat/spec-kit-preset-atom"
+  license: "MIT"
+
+requires:
+  speckit_version: ">=0.6.0"
+
+provides:
+  templates:
+    - type: "command"
+      name: "speckit.atom.context"
+      file: "commands/speckit.atom.context.md"
+      description: "Fetch Jira+Confluence+Figma context for an Atom task"
+
+    - type: "command"
+      name: "speckit.specify"
+      file: "commands/speckit.specify.md"
+      description: "Atom-aware specify: loads Jira context if task ID is provided"
+      strategy: "wrap"
+      replaces: "speckit.specify"
+
+    - type: "command"
+      name: "speckit.implement"
+      file: "commands/speckit.implement.md"
+      description: "Atom-aware implement: TypeScript check + AC verify + push/PR after implementation"
+      strategy: "wrap"
+      replaces: "speckit.implement"
+
+    - type: "template"
+      name: "spec-template"
+      file: "templates/spec-template.md"
+      description: "Atom sections appended to spec template"
+      strategy: "append"
+
+    - type: "template"
+      name: "plan-template"
+      file: "templates/plan-template.md"
+      description: "Atom sections appended to plan template"
+      strategy: "append"
+
+tags:
+  - "atom"
+  - "atlassian"
+  - "angular"
+  - "typescript"
+  - "jira"
+  - "confluence"
