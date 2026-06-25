@@ -1,5 +1,7 @@
 # Atom para spec-kit
 
+[![ci](https://github.com/antony-hernandez/spec-kit-atom/actions/workflows/ci.yml/badge.svg)](https://github.com/antony-hernandez/spec-kit-atom/actions/workflows/ci.yml)
+
 **Un harness de [spec-kit](https://github.com/github/spec-kit) que dirige el flujo Spec-Driven Development con las tecnologías, reglas y casos de uso de Atom** — para no repetir el mismo contexto en cada tarea.
 
 spec-kit es el core (avanza rápido, lo seguimos). Atom monta encima sus reglas y su ingesta de Jira/Confluence/Figma. Sin forkear, sin reimplementar el flujo: solo lo que es propio de Atom.
@@ -24,13 +26,17 @@ spec-kit distingue tres mecanismos. Atom usa los tres, en fases:
 
 Requiere [spec-kit](https://github.com/github/spec-kit) instalado (`uv tool install specify-cli --from git+https://github.com/github/spec-kit.git`) y un proyecto inicializado (`specify init . --integration claude`).
 
+Por defecto se instala la **última versión** (rama `main`):
+
 ```bash
 # Preset (reglas + templates de Atom)
-specify preset add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/tags/v1.0.0.zip
+specify preset add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/heads/main.zip
 
 # Extensión (ingesta + quality gates)
-specify extension add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/tags/v1.0.0.zip
+specify extension add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/heads/main.zip
 ```
+
+Para fijar una versión, apuntá a un tag en vez de `heads/main`: `.../archive/refs/tags/v1.0.0.zip`.
 
 En desarrollo, desde un clon local del repo:
 

@@ -1,0 +1,54 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validar manifests (estructura, refs, regex de nombres, hooks)
+        run: |
+          python3 -m pip install --quiet pyyaml
+          python3 scripts/validate-manifests.py
+
+      - name: Instalar spec-kit
+        run: |
+          python3 -m pip install --quiet uv
+          uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Smoke test e2e (preset + extensión)
+        run: |
+          set -euo pipefail
+          specify init proj --integration claude --ignore-agent-tools --force
+          cd proj
+
+          specify preset add atom --dev "$GITHUB_WORKSPACE/preset"
+          specify extension add "$GITHUB_WORKSPACE/extension" --dev
+
+          echo "→ preset instalado y enabled"
+          specify preset list | grep -qi "atom"
+
+          echo "→ constitution-template resuelve a Atom (replace)"
+          specify preset resolve constitution-template | grep -qi "presets/atom"
+
+          echo "→ spec/plan-template componen core → atom (append)"
+          specify preset resolve spec-template | grep -qi "presets/atom"
+          specify preset resolve plan-template | grep -qi "presets/atom"
+
+          echo "→ extensión instalada con sus 3 comandos"
+          specify extension list | grep -qi "atom"
+          for cmd in context verify pr; do
+            test -f ".claude/skills/speckit-atom-$cmd/SKILL.md"
+          done
+
+          echo "✓ smoke test e2e OK"
