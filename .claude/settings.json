@@ -9,19 +9,5 @@
       ],
       "env": {}
     }
-  },
-  "hooks": {
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 packages/cli/hooks/check-template-bump.py",
-            "timeout": 10
-          }
-        ]
-      }
-    ]
   }
 }
