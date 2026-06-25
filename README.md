@@ -26,10 +26,10 @@ Requiere [spec-kit](https://github.com/github/spec-kit) instalado (`uv tool inst
 
 ```bash
 # Preset (reglas + templates de Atom)
-specify preset add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/tags/v2.0.0.zip
+specify preset add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/tags/v1.0.0.zip
 
 # Extensión (ingesta + quality gates)
-specify extension add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/tags/v2.0.0.zip
+specify extension add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/tags/v1.0.0.zip
 ```
 
 En desarrollo, desde un clon local del repo:
@@ -102,13 +102,13 @@ extension/                       ← Fase 2 — extensión de spec-kit
     speckit.atom.context.md      ← ingesta Jira→Confluence→Figma
     speckit.atom.verify.md       ← typecheck + verificación de ACs
     speckit.atom.pr.md           ← creación de PR
-skills/                          ← Legacy / stopgap — skills ads:task y ads:spec
+skills/                          ← skills de Claude Code auxiliares (ads:task, ads:spec)
 .planning/                       ← diseño y spikes
 ```
 
-### `skills/` — stopgap
+### `skills/`
 
-`ads:task` (skill de Claude Code) ya hace hoy la ingesta Jira→Confluence→Figma. `speckit.atom.context` es su evolución dentro de spec-kit (fase 2). `skills/` se mantiene como stopgap y referencia hasta que la extensión esté publicada e instalada de forma estable.
+Skills de Claude Code que complementan el harness: `ads:task` (ingesta Jira→Confluence→Figma como skill) y `ads:spec` (FRD → spec técnica). `speckit.atom.context` es la versión de la ingesta integrada en el flujo de spec-kit.
 
 ---
 
