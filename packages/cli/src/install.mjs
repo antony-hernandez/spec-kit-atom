@@ -71,20 +71,30 @@ async function readTemplate(relativePath) {
 }
 
 // Detectar tipo de proyecto desde package.json
-function detectProjectTypes(root) {
-  const pkgPath = join(root, "package.json");
-  if (!existsSync(pkgPath)) return [];
+function readDeps(pkgPath) {
+  if (!existsSync(pkgPath)) return {};
   try {
     const pkg = JSON.parse(readFileSync(pkgPath, "utf8"));
-    const deps = { ...pkg.dependencies, ...pkg.devDependencies, ...pkg.peerDependencies };
-    const types = [];
-    if (deps["@angular/core"])                                          types.push("frontend-angular");
-    if (deps["firebase-functions"] || deps["@google-cloud/functions-framework"]) types.push("backend-cf");
-    if (deps["react-native"] || deps["expo"])                          types.push("mobile-rn");
-    return types;
+    return { ...pkg.dependencies, ...pkg.devDependencies, ...pkg.peerDependencies };
   } catch {
-    return [];
+    return {};
   }
+}
+
+function detectProjectTypes(root) {
+  // Firebase Cloud Functions ubica el package.json en functions/, no en la raíz —
+  // juntar deps de ambos para detectar backend en ese layout.
+  const deps = {
+    ...readDeps(join(root, "package.json")),
+    ...readDeps(join(root, "functions/package.json")),
+  };
+  if (Object.keys(deps).length === 0) return [];
+
+  const types = [];
+  if (deps["@angular/core"])                                          types.push("frontend-angular");
+  if (deps["firebase-functions"] || deps["@google-cloud/functions-framework"]) types.push("backend-cf");
+  if (deps["react-native"] || deps["expo"])                          types.push("mobile-rn");
+  return types;
 }
 
 const SECTION_LABELS = {
