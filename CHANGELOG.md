@@ -20,13 +20,15 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
-### Fixed
-- `detectProjectTypes` ahora detecta backend en repos con layout de Firebase (`package.json` en `functions/`, no en la raíz). Antes caían al fallback de "instalar todas las secciones".
+### Changed
+- **Pivot a harness de spec-kit.** El repo deja de ser un instalador npm (`ads`) y pasa a ser un preset de spec-kit. La investigación del modelo de spec-kit mostró que un preset solo overridea piezas core; los comandos nuevos (ingesta Jira) son trabajo de una extensión (fase 2).
 
 ### Added
-- `ads install` envuelve `specify init --preset atom --integration claude` cuando spec-kit está disponible, con fallback al flujo legacy si no lo está.
-- README: sección **Desinstalar** con los pasos manuales (no hay comando de uninstall).
-- CONTRIBUTING: tabla de referencia de qué instala el CLI, para guiar la desinstalación manual.
+- Preset `atom` (fase 1): `constitution-template` (replace) con las reglas de Atom + `spec-template`/`plan-template` (append) con las secciones de Atom.
+
+### Removed
+- CLI npm legacy: `packages/cli/` (installer, hooks, templates), `package.json`, `.claude-plugin/plugin.json`. Instalación ahora vía `specify preset add`.
+- Hook `PostToolUse` en `.claude/settings.json` que apuntaba a un script borrado.
 
 ---
 

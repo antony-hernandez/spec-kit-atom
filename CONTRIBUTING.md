@@ -1,71 +1,49 @@
-# Contributing to Atom Developer Skills
+# Contributing
+
+Este repo es un harness de [spec-kit](https://github.com/github/spec-kit) para Atom: un **preset** (fase 1) y, más adelante, una **extensión** y un **bundle**. Lo que aportamos vive encima de spec-kit — no forkeamos el core.
 
 ## Setup de desarrollo
 
 ```bash
-git clone https://github.com/antony-hernandez/atom-developer-skills
-cd atom-developer-skills
-npm run setup-dev   # instala el pre-push hook
+git clone https://github.com/antony-hernandez/spec-kit-atom
+cd spec-kit-atom
+pipx install spec-kit          # el CLI `specify`
+specify preset add atom --dev ./preset   # instala el preset desde la copia local
 ```
 
 ## Estructura
 
 ```
-.claude-plugin/
-  plugin.json              ← plugin manifest
-skills/
-  task/SKILL.md            ← skill ads:task
-  spec/SKILL.md            ← skill ads:spec
-packages/cli/
-  src/install.mjs          ← installer
-  templates/sections/      ← reglas por stack
-  hooks/pre-push           ← git hook de validación
+preset/
+  preset.yml                   ← manifest del preset
+  templates/
+    constitution-template.md   ← reglas de Atom (override de constitution core)
+    spec-template.md           ← secciones de Atom (append)
+    plan-template.md           ← constraints de Atom (append)
+skills/                        ← legacy/stopgap: ads:task, ads:spec
+.planning/                     ← diseño, plan, spikes
 CHANGELOG.md
 ```
 
-## Modificar un skill existente
+## Reglas del modelo de spec-kit (no negociables al editar `preset.yml`)
 
-1. Editar el archivo en `skills/<nombre>/SKILL.md`
-2. Agregar entrada en `CHANGELOG.md` bajo `## [x.y.z] - YYYY-MM-DD`
-3. Bump de `version` en `package.json` raíz siguiendo semver:
-   - **PATCH** (`1.0.x`): wording, typo, mejora de ejemplo
-   - **MINOR** (`1.x.0`): regla nueva, sección nueva, paso nuevo
-   - **MAJOR** (`x.0.0`): workflow restructurado, paso removido
+- Un **preset solo overridea** templates/commands que ya existen en el core. **No agrega comandos nuevos** — eso es una extensión.
+- Estrategias válidas: `replace` (default), `prepend`, `append`, `wrap` (`{CORE_TEMPLATE}` marca dónde va el contenido core).
+- Templates core overrideables: `constitution-template`, `spec-template`, `plan-template`, `tasks-template`, `checklist-template`, `agent-file-template`.
+- Las rutas `file:` son relativas a `preset.yml`.
 
-El pre-push hook bloquea el push si falta alguno de estos pasos.
+## Modificar el preset
 
-## Agregar un skill nuevo
+1. Editar el `template` correspondiente en `preset/templates/`.
+2. Bump de `preset.version` en `preset.yml` (semver).
+3. Entrada en `CHANGELOG.md`.
+4. Probar: `specify preset add atom --dev ./preset` en un proyecto de prueba y verificar que el constitution / spec / plan salen con el contexto de Atom.
 
-1. Crear `skills/<nombre>/SKILL.md` con frontmatter:
-   ```yaml
-   ---
-   name: <nombre>
-   description: Use when [condición de disparo, no resumen del workflow]
-   ---
-   ```
-2. Registrar la copia en el installer (`packages/cli/src/install.mjs`): agregar la entrada en el array `skills` dentro de `install()`
-3. Bump MINOR en `package.json`
-4. Entrada en `CHANGELOG.md`
+## Roadmap
 
-## Agregar una sección de stack
-
-1. Crear `packages/cli/templates/sections/<stack>.md`
-2. Agregar detección en `detectProjectTypes()` en el installer
-3. Agregar label en `SECTION_LABELS`
-4. Bump MINOR en `package.json` + entrada en `CHANGELOG.md`
-
-## Qué instala el CLI (referencia para uninstall)
-
-`install()` en `packages/cli/src/install.mjs` deja exactamente estos rastros por proyecto. Cualquier desinstalación manual debe revertirlos:
-
-| Artefacto | Origen |
-|-----------|--------|
-| `.claude/skills/task/`, `.claude/skills/spec/` | array `skills` en `install()` |
-| Bloque `ADS:START…ADS:END` en `CLAUDE.md` | `buildClaudeMd()` + marcadores |
-| `mcpServers.codegraph` en `.claude/settings.json` | paso de configuración de MCP |
-| `.claude/hooks/check-atomic-updates.sh` + `hooks.SessionStart` | **legacy** — versiones viejas; el installer actual ya no lo crea |
-
-Nunca tocar `.claude/settings.local.json` (preferencias locales del usuario) ni `.codegraph/` (índice de CodeGraph). La detección de stack lee `package.json` y, para el layout de Firebase, `functions/package.json`.
+- **Fase 1 — Preset** (actual): constitution + secciones en spec/plan.
+- **Fase 2 — Extensión**: `speckit.atom.context` (ingesta Jira+Confluence+Figma) + hooks `after_implement` (typecheck, verificación de ACs, PR). Evoluciona el skill `ads:task`.
+- **Fase 3 — Bundle**: `bundle.yml` que compone extensión + preset en un `specify bundle install`.
 
 ## Convención de commits
 
@@ -73,13 +51,12 @@ Nunca tocar `.claude/settings.local.json` (preferencias locales del usuario) ni 
 feat(scope):     nueva funcionalidad
 fix(scope):      corrección de bug
 docs(scope):     solo documentación
-chore(scope):    mantenimiento, bumps de versión
+chore(scope):    mantenimiento
 refactor(scope): refactor sin cambio de comportamiento
 ```
 
 ## Pull requests
 
-- Un PR por cambio lógico
-- El título sigue la convención de commits
-- Incluir descripción de qué cambia y por qué
-- El CI (pre-push hook) debe pasar localmente antes de abrir el PR
+- Un PR por cambio lógico.
+- El título sigue la convención de commits.
+- Incluir qué cambia y por qué.
