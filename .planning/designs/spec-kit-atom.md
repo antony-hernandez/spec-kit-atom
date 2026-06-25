@@ -101,8 +101,8 @@ Mismo repo, renombrado: `antony-hernandez/spec-kit-atom` (público, instalable v
 
 ### Fase 1 (preset)
 - [x] `preset.yml` válido contra el schema real (constitution-template replace + spec/plan append)
-- [ ] `specify preset add atom --dev ./preset` instala el constitution de Atom y compone los templates (pendiente: e2e con spec-kit instalado)
-- [ ] `/speckit.constitution`, `/speckit.specify`, `/speckit.plan` salen con el contexto de Atom
+- [x] `specify preset add atom --dev ./preset` instala el constitution de Atom y compone los templates — validado e2e con spec-kit v0.11.9: `preset resolve` muestra `constitution-template` reemplazado (contenido Atom) y `spec/plan-template` compuestos `core → atom`
+- [x] Los templates de Atom quedan en lugar para `/speckit.constitution`, `/speckit.specify`, `/speckit.plan` (confirmado por la resolución de capas)
 
 ### Fase 2 (extensión)
 - [ ] `speckit.atom.context CV-599` fetchea Jira+Confluence+Figma y deja contexto utilizable
