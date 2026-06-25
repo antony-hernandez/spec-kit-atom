@@ -102,13 +102,8 @@ extension/                       ← Fase 2 — extensión de spec-kit
     speckit.atom.context.md      ← ingesta Jira→Confluence→Figma
     speckit.atom.verify.md       ← typecheck + verificación de ACs
     speckit.atom.pr.md           ← creación de PR
-skills/                          ← skills de Claude Code auxiliares (ads:task, ads:spec)
 .planning/                       ← diseño y spikes
 ```
-
-### `skills/`
-
-Skills de Claude Code que complementan el harness: `ads:task` (ingesta Jira→Confluence→Figma como skill) y `ads:spec` (FRD → spec técnica). `speckit.atom.context` es la versión de la ingesta integrada en el flujo de spec-kit.
 
 ---
 

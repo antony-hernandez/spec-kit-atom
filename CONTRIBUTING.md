@@ -20,8 +20,10 @@ preset/
     constitution-template.md   ← reglas de Atom (override de constitution core)
     spec-template.md           ← secciones de Atom (append)
     plan-template.md           ← constraints de Atom (append)
-skills/                        ← legacy/stopgap: ads:task, ads:spec
-.planning/                     ← diseño, plan, spikes
+extension/
+  extension.yml                ← manifest (comandos + hooks)
+  commands/                    ← speckit.atom.context / verify / pr
+.planning/                     ← diseño, roadmap, spikes
 CHANGELOG.md
 ```
 
@@ -42,7 +44,7 @@ CHANGELOG.md
 ## Roadmap
 
 - **Fase 1 — Preset** (actual): constitution + secciones en spec/plan.
-- **Fase 2 — Extensión**: `speckit.atom.context` (ingesta Jira+Confluence+Figma) + hooks `after_implement` (typecheck, verificación de ACs, PR). Evoluciona el skill `ads:task`.
+- **Fase 2 — Extensión**: `speckit.atom.context` (ingesta Jira+Confluence+Figma) + hooks `after_implement` (typecheck, verificación de ACs, PR).
 - **Fase 3 — Bundle**: `bundle.yml` que compone extensión + preset en un `specify bundle install`.
 
 ## Convención de commits

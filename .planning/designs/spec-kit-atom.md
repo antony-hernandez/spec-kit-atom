@@ -1,15 +1,11 @@
 # Design: Atom como harness de spec-kit
 
-**Fecha:** 2026-06-25 (reescrito tras investigar el modelo real de spec-kit)
-**Estado:** Aprobado — fase 1 implementada
+**Fecha:** 2026-06-25
+**Estado:** Aprobado — fases 1 y 2 implementadas
 
 ## Contexto
 
-Atom Developer Skills (ADS) provee dos skills de Claude Code:
-- `ads:spec` — convierte FRDs de Confluence en Spec Técnica
-- `ads:task` — toma un task de Jira y ejecuta el ciclo de implementación (Jira→Confluence→Figma→CodeGraph→brief)
-
-spec-kit (GitHub-backed, ecosistema creciente de extensiones/presets, soporte 17+ agentes) es una base sólida de SDD. La oportunidad: usar spec-kit como **core que avanza solo**, y montar encima lo propio de Atom — reglas del codebase + ingesta de Jira — sin forkear ni reimplementar el flujo.
+El flujo de Atom es Jira-first (task → HU → Spec Técnica en Confluence → Figma) y tiene reglas de codebase no negociables (Angular, sin `any`, i18n, CodeGraph, commits). spec-kit (GitHub-backed, ecosistema creciente de extensiones/presets, soporte 17+ agentes) es una base sólida de SDD. La oportunidad: usar spec-kit como **core que avanza solo**, y montar encima lo propio de Atom — reglas del codebase + ingesta de Jira — sin forkear ni reimplementar el flujo.
 
 ## Problema
 
@@ -60,13 +56,13 @@ preset/
 
 Instalación: `specify preset add atom --dev ./preset` (o `--from <zip>` / catálogo).
 
-### Fase 2 — Extensión `atom` ⏳
+### Fase 2 — Extensión `atom` ✅ (implementada)
 
 ```
 extension/
   extension.yml
   commands/
-    speckit.atom.context.md      ingesta Jira+Confluence+Figma (evoluciona ads:task)
+    speckit.atom.context.md      ingesta Jira+Confluence+Figma
     speckit.atom.verify.md       typecheck TS + verificación de ACs
     speckit.atom.pr.md           crear PR con [TICKET-ID]
   hooks:
@@ -84,18 +80,18 @@ bundle.yml   → referencia extensión atom + preset atom
 
 Instalación única: `specify bundle install atom`.
 
-## Lo que no cambia / stopgap
+## Roadmap pendiente
 
-- `skills/task` (`ads:task`) ya hace la ingesta Jira→Confluence→Figma hoy. Se mantiene como **stopgap** y como **prototipo de referencia** para `speckit.atom.context` (fase 2).
-- El source of truth entre sprints sigue siendo la Spec Técnica en Confluence.
+- **`speckit.atom.spec`** — comando de extensión para el *upstream*: FRD (Confluence) → Spec Técnica (Confluence) + backlog de Jira. Es el sprint de diseño que produce los tickets que después alimentan `speckit.atom.context`. spec-kit no lo cubre.
+- **Bundle** (fase 3) y publicación en catálogo / tag para instalar vía `--from`.
 
-## Lo que se deprecó (fase de limpieza)
+## Notas
 
-- `packages/cli/` (installer npm `ads`), `package.json`, `.claude-plugin/plugin.json` → reemplazados por `specify preset add`. **Borrados.**
+- El source of truth entre sprints sigue siendo la Spec Técnica en Confluence; los archivos locales de spec-kit son contexto del agente.
 
 ## Repositorio
 
-Mismo repo, renombrado: `antony-hernandez/spec-kit-atom` (público, instalable vía `specify preset add --from`).
+`antony-hernandez/spec-kit-atom` (público, instalable vía `specify preset add --from`).
 
 ## Criterios de aceptación
 

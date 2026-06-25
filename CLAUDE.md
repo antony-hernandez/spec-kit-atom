@@ -28,12 +28,10 @@ Diseño completo: `.planning/designs/spec-kit-atom.md`.
 ## Estructura
 
 ```
-preset/                          fase 1 (manifest + templates)
-skills/                          legacy/stopgap: ads:task, ads:spec — prototipo de la ingesta fase 2
-.planning/designs/               diseño corregido al modelo real de spec-kit
+preset/                          fase 1 — manifest + templates
+extension/                       fase 2 — manifest + comandos + hooks
+.planning/designs/               diseño + roadmap
 ```
-
-`skills/` se mantiene como stopgap de ingesta Jira y referencia para construir la extensión; no es código a integrar en el harness.
 
 ## Convenciones
 

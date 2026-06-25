@@ -1,0 +1,8 @@
+{
+  "name": "ads",
+  "description": "Atom Developer Skills — spec-driven development assistant for the Atom team",
+  "author": {
+    "name": "Antony Hernandez",
+    "email": "antony.hernandez@atomchat.io"
+  }
+}
