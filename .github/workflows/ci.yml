@@ -35,18 +35,22 @@ jobs:
           specify preset add atom --dev "$GITHUB_WORKSPACE/preset"
           specify extension add "$GITHUB_WORKSPACE/extension" --dev
 
+          # nota: grep sin -q a propósito — con `set -o pipefail`, `grep -q` cierra
+          # el pipe al primer match y el comando de la izquierda muere por SIGPIPE
+          # (exit 141), haciendo fallar el pipeline aunque el match exista.
+
           echo "→ preset instalado y enabled"
-          specify preset list | grep -qi "atom"
+          specify preset list | grep -i "atom"
 
           echo "→ constitution-template resuelve a Atom (replace)"
-          specify preset resolve constitution-template | grep -qi "presets/atom"
+          specify preset resolve constitution-template | grep -i "presets/atom"
 
           echo "→ spec/plan-template componen core → atom (append)"
-          specify preset resolve spec-template | grep -qi "presets/atom"
-          specify preset resolve plan-template | grep -qi "presets/atom"
+          specify preset resolve spec-template | grep -i "presets/atom"
+          specify preset resolve plan-template | grep -i "presets/atom"
 
           echo "→ extensión instalada con sus 3 comandos"
-          specify extension list | grep -qi "atom"
+          specify extension list | grep -i "atom"
           for cmd in context verify pr; do
             test -f ".claude/skills/speckit-atom-$cmd/SKILL.md"
           done
