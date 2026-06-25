@@ -6,30 +6,36 @@ Versioning follows [Semantic Versioning](https://semver.org/).
 
 ## Versioning conventions
 
-### Package (`package.json`)
-- **MAJOR** — breaking change to installer behavior or skill contract (e.g. renamed files, removed steps)
-- **MINOR** — new skill added, new installer feature, new tech section
-- **PATCH** — rule wording fix, bug in installer, typo
+Desde la v2.0.0 el repo es un harness de spec-kit. Versionado:
 
-### Skills (`version` in frontmatter)
-- **MAJOR** — workflow restructured or step removed (users need to re-learn the flow)
-- **MINOR** — new rule, new section, new step added
-- **PATCH** — wording clarification, typo, example improved
+### Repo (este CHANGELOG)
+- **MAJOR** — cambio de arquitectura o breaking en cómo se instala/usa
+- **MINOR** — fase/pieza nueva (preset, extensión, bundle), comando o template nuevo
+- **PATCH** — fix o ajuste de wording en un manifest/template
+
+### Componentes (`version` en `preset.yml` / `extension.yml`)
+Cada pieza versiona su propio `version` con el mismo criterio semver.
 
 ---
 
-## [Unreleased]
+## [2.0.0] — 2026-06-25
 
-### Changed
-- **Pivot a harness de spec-kit.** El repo deja de ser un instalador npm (`ads`) y pasa a ser un preset de spec-kit. La investigación del modelo de spec-kit mostró que un preset solo overridea piezas core; los comandos nuevos (ingesta Jira) son trabajo de una extensión (fase 2).
+Pivot completo: de plugin/CLI npm de Claude Code (`ads`) a **harness de spec-kit** (preset + extensión). La investigación del modelo real de spec-kit mostró que un preset solo overridea piezas core, y los comandos nuevos (ingesta Jira) son trabajo de una extensión.
 
 ### Added
-- Preset `atom` (fase 1): `constitution-template` (replace) con las reglas de Atom + `spec-template`/`plan-template` (append) con las secciones de Atom.
-- Extensión `atom` (fase 2): comandos `speckit.atom.context` (ingesta Jira+Confluence+Figma), `speckit.atom.verify` (typecheck + ACs) y `speckit.atom.pr`, enganchados con hooks `before_specify` y `after_implement`.
+- **Preset `atom`** (fase 1): `constitution-template` (replace) con las reglas de Atom + `spec-template`/`plan-template` (append) con las secciones de Atom (stack, Figma, contratos TS, blast radius). Validado e2e con spec-kit v0.11.9.
+- **Extensión `atom`** (fase 2): comandos `speckit.atom.context` (ingesta Jira+Confluence+Figma), `speckit.atom.verify` (typecheck + verificación de ACs) y `speckit.atom.pr`, enganchados con hooks `before_specify` y `after_implement`.
+
+### Changed
+- El repo pasó a ser un harness de spec-kit; se instala vía `specify preset add` / `specify extension add`, no npm.
+- Repo renombrado: `atom-developer-skills` → `spec-kit-atom`.
 
 ### Removed
-- CLI npm legacy: `packages/cli/` (installer, hooks, templates), `package.json`, `.claude-plugin/plugin.json`. Instalación ahora vía `specify preset add`.
+- CLI npm legacy: `packages/cli/` (installer, hooks, templates), `package.json`, `.claude-plugin/plugin.json`.
 - Hook `PostToolUse` en `.claude/settings.json` que apuntaba a un script borrado.
+
+### Stopgap
+- `skills/` (`ads:task`, `ads:spec`) se mantiene como skill de Claude Code y referencia para la extensión, hasta que la extensión esté publicada de forma estable.
 
 ---
 
