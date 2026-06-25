@@ -1,3 +1,4 @@
 node_modules/
 .claude/skills/
 .claude/settings.local.json
+.claude-plugin/
