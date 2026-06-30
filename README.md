@@ -51,6 +51,21 @@ Verificá con `specify preset list` y `specify extension list`.
 > No funciona instalar con `--from <repo>/archive/refs/heads/main.zip`: ese archive deja el `preset.yml` en `preset/` y spec-kit no lo encuentra. Usá los assets del release (manifest en la raíz) o `--dev`.
 > `specify init --preset` toma un **ID de catálogo**, no una URL.
 
+### Actualizar
+
+No hay auto-update: lo instalado es un **snapshot** del momento. Un release nuevo no toca los proyectos ya instalados — hay que actualizarlos a mano (igual que spec-kit, que usa `specify self upgrade` para su propio CLI).
+
+```bash
+# Extensión — tiene update propio
+specify extension update atom
+
+# Preset — no tiene update: quitar y reinstalar
+specify preset remove atom
+specify preset add atom --from https://github.com/antony-hernandez/spec-kit-atom/releases/latest/download/atom-preset.zip
+```
+
+Después, **re-correr `/speckit.constitution`**: el preset trae el *template* de la constitution, no el `.specify/memory/constitution.md` ya generado — ese se regenera al correr el comando.
+
 ---
 
 ## Flujo de trabajo
