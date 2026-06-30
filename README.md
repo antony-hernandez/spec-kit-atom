@@ -26,28 +26,30 @@ spec-kit distingue tres mecanismos. Atom usa los tres, en fases:
 
 Requiere [spec-kit](https://github.com/github/spec-kit) instalado (`uv tool install specify-cli --from git+https://github.com/github/spec-kit.git`) y un proyecto inicializado (`specify init . --integration claude`).
 
-Por defecto se instala la **última versión** (rama `main`):
+### Desde un release (recomendado)
+
+`specify --from` espera el manifest en la **raíz** del zip, así que se instala desde los assets del release (no desde el archive del repo, que anida `preset.yml` bajo `preset/`). El workflow de release publica `atom-preset.zip` y `atom-extension.zip` por cada tag `v*`:
 
 ```bash
-# Preset (reglas + templates de Atom)
-specify preset add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/heads/main.zip
-
-# Extensión (ingesta + quality gates)
-specify extension add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/heads/main.zip
+specify preset add atom --from https://github.com/antony-hernandez/spec-kit-atom/releases/latest/download/atom-preset.zip
+specify extension add atom --from https://github.com/antony-hernandez/spec-kit-atom/releases/latest/download/atom-extension.zip
 ```
 
-Para fijar una versión, apuntá a un tag en vez de `heads/main`: `.../archive/refs/tags/v1.0.0.zip`.
+`releases/latest/download/...` siempre apunta al release más nuevo. Para fijar una versión, reemplazá `latest/download` por `download/v1.1.0`.
 
-En desarrollo, desde un clon local del repo:
+### Desde un clon (desarrollo)
 
 ```bash
+git clone https://github.com/antony-hernandez/spec-kit-atom
+cd spec-kit-atom
 specify preset add atom --dev ./preset
 specify extension add ./extension --dev
 ```
 
 Verificá con `specify preset list` y `specify extension list`.
 
-> `specify init --preset` toma un **ID de catálogo**, no una URL. Para URL o ruta local usá `specify preset add` / `specify extension add`.
+> No funciona instalar con `--from <repo>/archive/refs/heads/main.zip`: ese archive deja el `preset.yml` en `preset/` y spec-kit no lo encuentra. Usá los assets del release (manifest en la raíz) o `--dev`.
+> `specify init --preset` toma un **ID de catálogo**, no una URL.
 
 ---
 

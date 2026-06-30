@@ -1,0 +1,31 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # spec-kit `--from` espera el manifest (preset.yml / extension.yml) en la RAÍZ del zip.
+      # El archive del repo lo dejaría anidado bajo preset/ o extension/, por eso se empaquetan
+      # los CONTENIDOS de cada subdir.
+      - name: Build component archives (manifest at zip root)
+        run: |
+          (cd preset && zip -rq "$GITHUB_WORKSPACE/atom-preset.zip" .)
+          (cd extension && zip -rq "$GITHUB_WORKSPACE/atom-extension.zip" .)
+
+      - name: Create release with component assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            atom-preset.zip atom-extension.zip \
+            --title "$TAG" --generate-notes

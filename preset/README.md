@@ -17,19 +17,16 @@ Un **preset** solo overridea piezas core de spec-kit (no agrega comandos nuevos)
 Desde un proyecto con spec-kit inicializado:
 
 ```bash
-# Por catálogo (cuando esté publicado)
-specify preset add atom
+# Desde el asset del release (manifest en la raíz del zip)
+specify preset add atom --from https://github.com/antony-hernandez/spec-kit-atom/releases/latest/download/atom-preset.zip
 
-# Desde una URL (zip de un tag del repo)
-specify preset add atom --from https://github.com/antony-hernandez/spec-kit-atom/archive/refs/tags/v1.0.0.zip
-
-# En desarrollo, desde una copia local
+# En desarrollo, desde una copia local (clon del repo)
 specify preset add atom --dev ./preset
 ```
 
 Verificá con `specify preset list`. Tras instalar, al correr `/speckit.constitution`, `/speckit.specify` y `/speckit.plan` el flujo ya sale con el contexto de Atom.
 
-> `--preset` en `specify init` toma un **ID de catálogo**, no una URL. Para instalar desde URL o ruta local usá `specify preset add`.
+> No usar `--from <repo>/archive/...zip`: ese archive anida `preset.yml` bajo `preset/` y spec-kit no lo encuentra. Usar el asset del release (`atom-preset.zip`, con el manifest en la raíz) o `--dev`.
 
 ## Requisitos
 
