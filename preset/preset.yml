@@ -3,7 +3,7 @@ schema_version: "1.0"
 preset:
   id: "atom"
   name: "Atom Developer Skills"
-  version: "1.0.0"
+  version: "1.1.0"
   description: "Atom codebase steering: constitution rules (Angular/TypeScript/CodeGraph) and Atom sections in spec/plan templates"
   author: "Atom Team"
   repository: "https://github.com/antony-hernandez/spec-kit-atom"

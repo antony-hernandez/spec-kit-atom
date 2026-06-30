@@ -59,10 +59,20 @@ codegraph_context(task: "<descripción>")   # ¿cómo funciona lo relacionado?
 codegraph_impact("<NombreComponente>")     # ¿qué se rompe si lo modifico?
 ```
 
+### Testing
+- Stack: **mocha + chai + sinon** (no jest, aunque algún spec viejo lo mencione). Stubear estáticos con `sinon.stub(Repo, "metodo")`, restaurar en `afterEach`.
+- Correr config necesita env (`FIRE_PROJECT_ID_KEY`, `FIRE_DATABASE_URL_KEY`, `FIRE_STORAGE_BUCKET_KEY`) — los specs cargan `.env` (gitignored) vía dotenv.
+- **Testabilidad:** algunos módulos no cargan en aislamiento por acoplamiento de imports (deps circulares + compilación ESM). Si un módulo no es unit-testeable directo, extraer la lógica a una unidad con imports livianos — o, si el spec exige diff mínimo, cubrir con casos manuales y declararlo en el PR. No forzar ni inventar un test que no corre.
+
+### Ramas y PRs
+- VCS: **Bitbucket** (`bitbucket.org/AtomChat`). `gh` no aplica para PRs — la API REST necesita app password (el SSH solo sirve para git).
+- Convención de rama: `feature/<TICKET-ID>-<descripción>`, normalmente contra `master`. La rama suele **existir ya en remote** — `git fetch` y usarla, no inventar nombre ni base.
+- Para no pisar trabajo sin commitear de otra tarea, trabajar en un **git worktree** aparte (`git worktree add <path> <rama>`) en vez de cambiar de rama en el checkout principal.
+
 ### Commits
 Formato obligatorio: `<tipo>(<scope>): <descripción> [<TICKET-ID>]`. Tipos: `feat`, `fix`, `refactor`, `test`, `style`, `docs`. Una tarea = un commit.
 
 ## Governance
 Esta constitución supera cualquier práctica ad-hoc. Toda revisión de PR verifica el cumplimiento de estos principios. Cualquier complejidad que los contradiga debe justificarse explícitamente; ante ambigüedad en el spec, preguntar antes de asumir.
 
-**Version**: 1.0.0 | **Ratified**: 2026-06-25 | **Last Amended**: 2026-06-25
+**Version**: 1.1.0 | **Ratified**: 2026-06-25 | **Last Amended**: 2026-06-30

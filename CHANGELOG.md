@@ -15,6 +15,18 @@ Cada pieza versiona su propio `version` con el mismo criterio semver.
 
 ---
 
+## [1.1.0] — 2026-06-30
+
+Endurecimiento a partir de dogfoodear una tarea real (CV-764) — el harness se había construido con supuestos que la ejecución real desmintió.
+
+### Changed
+- **Extensión `atom` → v1.1.0**:
+  - `speckit.atom.pr`: detecta el host del remote y soporta **Bitbucket** (no solo GitHub/`gh`) — vía app password, con fallback al link de creación manual si no hay credenciales.
+  - `speckit.atom.context`: detecta la **rama remota existente** del ticket (`feature/<TICKET-ID>-...`) en vez de inventar nombre/base; si no existe, pregunta.
+- **Preset `atom` → v1.1.0** (constitution v1.1.0): test stack real (**mocha+chai+sinon**, env/dotenv), nota de testabilidad (acoplamiento de imports → extraer unidad o cubrir manual), convención de ramas + PRs (Bitbucket, `feature/...` → `master`), y patrón de **git worktree** para aislar trabajo sin commitear.
+
+---
+
 ## [1.0.0] — 2026-06-25
 
 Primera versión. Atom como harness de spec-kit: dirige el flujo SDD con las reglas y la ingesta de contexto de Atom, montándose encima de spec-kit.

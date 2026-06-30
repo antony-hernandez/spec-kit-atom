@@ -60,7 +60,19 @@ Extraer archivos a modificar, contratos TypeScript y criterios técnicos. Buscar
 
 En el FRD, ubicar la sección `### HU-XX` de la HU padre y extraer el **node-id específico de esa sección** (no el genérico del header). Si no hay node-id → anotar `⚠️ Figma ausente`.
 
-## Paso 5 — Escribir `.specify/memory/atom-context.md`
+## Paso 5 — Rama del ticket
+
+La rama suele **existir ya en remote** — no inventar nombre ni base. Detectarla:
+
+```bash
+git fetch origin
+git branch -r | grep -i "$ARGUMENTS"
+```
+
+- Caso normal: **ya existe** (convención Atom: `feature/<TICKET-ID>-<descripción>`) → usar esa, y anotar su target de PR (normalmente `master`).
+- Si **no existe** → **preguntar al usuario** qué rama/base usar. No inventarla ni crearla automáticamente.
+
+## Paso 6 — Escribir `.specify/memory/atom-context.md`
 
 Crear o sobreescribir con este formato:
 
@@ -68,7 +80,8 @@ Crear o sobreescribir con este formato:
 # Atom Context — $ARGUMENTS
 
 **Task type:** FE | BE
-**Rama sugerida:** $ARGUMENTS/<descripción-corta>
+**Rama:** <rama remota existente, e.g. feature/$ARGUMENTS-...; o "a crear">
+**PR target:** <e.g. master>
 
 ## Task
 **Summary:** <summary>
