@@ -67,7 +67,7 @@ codegraph_impact("<NombreComponente>")     # ¿qué se rompe si lo modifico?
 ### Ramas y PRs
 - VCS: **Bitbucket** (`bitbucket.org/AtomChat`). `gh` no aplica para PRs — la API REST necesita app password (el SSH solo sirve para git).
 - Convención de rama: `feature/<TICKET-ID>-<descripción>`, normalmente contra `master`. La rama suele **existir ya en remote** — `git fetch` y usarla, no inventar nombre ni base.
-- Para no pisar trabajo sin commitear de otra tarea, trabajar en un **git worktree** aparte (`git worktree add <path> <rama>`) en vez de cambiar de rama en el checkout principal.
+- Si hay trabajo sin commitear de otra tarea, **preguntar al usuario** si trabajar en un **git worktree** aparte (`git worktree add <path> <rama>`) en vez de cambiar de rama en el checkout principal. No crear el worktree sin confirmar — es una decisión del usuario.
 
 ### Commits
 Formato obligatorio: `<tipo>(<scope>): <descripción> [<TICKET-ID>]`. Tipos: `feat`, `fix`, `refactor`, `test`, `style`, `docs`. Una tarea = un commit.
@@ -75,4 +75,4 @@ Formato obligatorio: `<tipo>(<scope>): <descripción> [<TICKET-ID>]`. Tipos: `fe
 ## Governance
 Esta constitución supera cualquier práctica ad-hoc. Toda revisión de PR verifica el cumplimiento de estos principios. Cualquier complejidad que los contradiga debe justificarse explícitamente; ante ambigüedad en el spec, preguntar antes de asumir.
 
-**Version**: 1.1.0 | **Ratified**: 2026-06-25 | **Last Amended**: 2026-06-30
+**Version**: 1.1.1 | **Ratified**: 2026-06-25 | **Last Amended**: 2026-06-30

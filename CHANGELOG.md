@@ -15,6 +15,13 @@ Cada pieza versiona su propio `version` con el mismo criterio semver.
 
 ---
 
+## [1.1.1] — 2026-06-30
+
+### Changed
+- **Preset `atom` → v1.1.1** (constitution v1.1.1): el uso de un git worktree (para aislar trabajo sin commitear) ahora se **pregunta al usuario** — no se crea sin confirmar. Es una decisión del usuario.
+
+---
+
 ## [1.1.0] — 2026-06-30
 
 Endurecimiento a partir de dogfoodear una tarea real (CV-764) — el harness se había construido con supuestos que la ejecución real desmintió.
